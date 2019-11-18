@@ -1,0 +1,17 @@
+{
+  "name": "telegram_geo_quiz",
+  "version": "1.0.0",
+  "description": "Simple Telegram Geo Quiz",
+  "main": "app.ts",
+  "repository": "https://github.com/HenrikFricke/telegram-geo-quiz",
+  "author": "Henrik Fricke <henrikfricke@web.de>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha tests/unit/"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.36",
+    "typescript": "^3.7.2"
+  }
+}
