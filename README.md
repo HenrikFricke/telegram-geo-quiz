@@ -10,7 +10,13 @@
 
 ## Development
 
-Make sure to have AWS credentials in your environment to process the deployment.
+Make sure to have AWS credentials in your environment to process the deployment. Also, create a `.env` file with the following variables:
+
+```
+TELEGRAM_BOT_TOKEN=
+```
+
+Now you can execute the following commands:
 
 ```shell
 # Install Yarn dependencies
@@ -26,6 +32,12 @@ $ > make create-bucket
 # Transpile TS files, upload package to S3 bucket and deploy Cloudformation stack
 $ > make deploy
 ```
+
+## Improvements
+
+- Get rid of the TypeScript files in deployed package
+- Get rid of the dev dependencies in deployed package
+- Use GitHub Actions to automate deployment
 
 ## Resources
 

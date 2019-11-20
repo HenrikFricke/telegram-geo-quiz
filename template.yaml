@@ -2,6 +2,10 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: telegram-geo-quiz
 
+Parameters:
+  TelegramBotToken:
+    Type: String
+
 Globals:
   Function:
     Timeout: 3
@@ -13,12 +17,15 @@ Resources:
       CodeUri: telegram-geo-quiz/
       Handler: app.handler
       Runtime: nodejs10.x
+      Environment:
+        Variables:
+          TELEGRAM_BOT_TOKEN: !Ref TelegramBotToken
       Events:
         TelegramGeoQuiz:
           Type: Api
           Properties:
             Path: /
-            Method: get
+            Method: post
 
 Outputs:
   TelegramGeoQuizApi:
