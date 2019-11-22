@@ -14,9 +14,9 @@ Resources:
   TelegramGeoQuiz:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: telegram-geo-quiz/src/
-      Handler: app.handler
-      Runtime: nodejs10.x
+      CodeUri: telegram-geo-quiz/
+      Handler: src/app.handler
+      Runtime: nodejs12.x
       Environment:
         Variables:
           TELEGRAM_BOT_TOKEN: !Ref TelegramBotToken
