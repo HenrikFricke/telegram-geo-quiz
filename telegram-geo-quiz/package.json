@@ -8,14 +8,28 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "test": "mocha tests/unit/"
+    "test": "ava"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.36",
     "@types/node-fetch": "^2.5.3",
+    "ava": "^2.4.0",
+    "ts-node": "^8.5.2",
     "typescript": "^3.7.2"
   },
   "dependencies": {
     "node-fetch": "^2.6.0"
+  },
+  "ava": {
+    "files": [
+      "src/**/*.test.ts"
+    ],
+    "compileEnhancements": false,
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
   }
 }

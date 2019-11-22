@@ -4,6 +4,7 @@ export interface Update {
   update_id: string;
   message: {
     message_id: string;
+    text?: string;
     chat: {
       id: string;
     };
