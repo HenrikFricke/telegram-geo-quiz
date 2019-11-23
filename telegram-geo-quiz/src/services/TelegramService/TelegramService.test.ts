@@ -1,18 +1,77 @@
-import test from "ava";
+import anyTest, { TestInterface } from "ava";
 import sinon from "sinon";
 import { TelegramService } from "./TelegramService";
-import { TelegramWebhookUpdate } from "./TelegramServiceInterface";
+import {
+  TelegramWebhookUpdate,
+  TelegramServiceInterface
+} from "./TelegramServiceInterface";
 import { TelegramClient } from "../../clients/TelegramClient/TelegramClient";
 import { QuizService } from "../QuizService/QuizService";
 import { LocationRepository } from "../../repositories/LocationRepository/LocationRepository";
+import { TelegramClientInterface } from "../../clients/TelegramClient/TelegramClientInterface";
+import { QuizServiceInterface } from "../QuizService/QuizServiceInterface";
+import { Question } from "../QuizService/QuizServiceInterface";
 
-test("init message", async t => {
-  const telegramClient = new TelegramClient("");
-  const sendMessageFake = sinon.fake();
-  sinon.replace(telegramClient, "sendMessage", sendMessageFake);
+const test = anyTest as TestInterface<{
+  telegramClient: TelegramClientInterface;
+  quizService: QuizServiceInterface;
+  telegramService: TelegramServiceInterface;
+  sendMessageFake: sinon.SinonSpy;
+}>;
 
-  const quizService = new QuizService(new LocationRepository());
-  const telegramService = new TelegramService(quizService, telegramClient);
+const fakeQuestion: Question = {
+  question: "What is the capital city of Italy?",
+  answers: [
+    {
+      label: "Rome",
+      isCorrect: true
+    },
+    {
+      label: "Madrid",
+      isCorrect: false
+    }
+  ]
+};
+
+const replyMarkup = {
+  inline_keyboard: [
+    [
+      {
+        text: fakeQuestion.answers[0].label,
+        callback_data: "Wow! You're absolutely right."
+      },
+      {
+        text: fakeQuestion.answers[1].label,
+        callback_data: "Hm, your answer was wrong 😱"
+      }
+    ]
+  ]
+};
+
+test.beforeEach(t => {
+  t.context.telegramClient = new TelegramClient("");
+  t.context.sendMessageFake = sinon.fake();
+  sinon.replace(
+    t.context.telegramClient,
+    "sendMessage",
+    t.context.sendMessageFake
+  );
+
+  t.context.quizService = new QuizService(new LocationRepository());
+  sinon.replace(
+    t.context.quizService,
+    "newQuestion",
+    sinon.fake.resolves({ question: fakeQuestion })
+  );
+
+  t.context.telegramService = new TelegramService(
+    t.context.quizService,
+    t.context.telegramClient
+  );
+});
+
+test("/start", async t => {
+  const chatId = "chat id";
 
   const startUpdate: TelegramWebhookUpdate = {
     update_id: "1",
@@ -20,17 +79,101 @@ test("init message", async t => {
       message_id: "1",
       text: "/start",
       chat: {
-        id: "1"
+        id: chatId
       }
     }
   };
 
-  await telegramService.handle(startUpdate);
+  await t.context.telegramService.handle(startUpdate);
 
   t.true(
-    sendMessageFake.calledWith({
-      chat_id: "1",
+    t.context.sendMessageFake.calledWith({
+      chat_id: chatId,
       text: "Welcom to Geo Quizzz 👋"
+    })
+  );
+});
+
+test("/new", async t => {
+  const chatId = "chat id";
+
+  const startUpdate: TelegramWebhookUpdate = {
+    update_id: "1",
+    message: {
+      message_id: "1",
+      text: "/new",
+      chat: {
+        id: chatId
+      }
+    }
+  };
+
+  await t.context.telegramService.handle(startUpdate);
+
+  t.true(
+    t.context.sendMessageFake.calledWith({
+      chat_id: chatId,
+      text: fakeQuestion.question,
+      reply_markup: replyMarkup
+    })
+  );
+});
+
+test("callback query", async t => {
+  const chatId = "chat id";
+  const data = "Hello world";
+
+  const startUpdate: TelegramWebhookUpdate = {
+    update_id: "1",
+    callback_query: {
+      data: data,
+      message: {
+        chat: {
+          id: chatId
+        }
+      }
+    }
+  };
+
+  await t.context.telegramService.handle(startUpdate);
+
+  t.true(
+    t.context.sendMessageFake.calledWith({
+      chat_id: chatId,
+      text: data
+    })
+  );
+
+  t.true(
+    t.context.sendMessageFake.calledWith({
+      chat_id: chatId,
+      text: fakeQuestion.question,
+      reply_markup: replyMarkup
+    })
+  );
+});
+
+test("unknown message", async t => {
+  const chatId = "chat id";
+
+  const startUpdate: TelegramWebhookUpdate = {
+    update_id: "1",
+    message: {
+      message_id: "1",
+      text: "Hello lovely bot",
+      chat: {
+        id: chatId
+      }
+    }
+  };
+
+  await t.context.telegramService.handle(startUpdate);
+
+  t.true(
+    t.context.sendMessageFake.calledWith({
+      chat_id: chatId,
+      text:
+        "Hm, looks like I don't understand your message 😞 Do you want to have a /new question?"
     })
   );
 });
