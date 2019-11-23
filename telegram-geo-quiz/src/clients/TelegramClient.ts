@@ -2,18 +2,32 @@ import fetch from "node-fetch";
 
 export interface Update {
   update_id: string;
-  message: {
+  message?: {
     message_id: string;
     text?: string;
     chat: {
       id: string;
     };
   };
+  callback_query?: {
+    data: string;
+    message: {
+      chat: {
+        id: string;
+      };
+    };
+  };
 }
 
 export interface SendMessageOptions {
-  chatId: string;
+  chat_id: string;
   text: string;
+  reply_markup?: {
+    inline_keyboard?: {
+      text: string;
+      callback_data: string;
+    }[][];
+  };
 }
 
 export class TelegramClient {
@@ -24,17 +38,12 @@ export class TelegramClient {
   }
 
   sendMessage(options: SendMessageOptions) {
-    console.log(this.url);
-
     return fetch(`${this.url}/sendMessage`, {
       method: "post",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        chat_id: options.chatId,
-        text: options.text
-      })
+      body: JSON.stringify(options)
     });
   }
 }

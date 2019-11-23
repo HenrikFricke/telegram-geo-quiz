@@ -1,4 +1,6 @@
 import { Update, TelegramClient } from "./clients/TelegramClient";
+import { LocationRepository } from "./repositories/LocationRepository";
+import { QuizService } from "./services/QuizService";
 import {
   APIGatewayProxyResult,
   APIGatewayEventRequestContext,
@@ -25,31 +27,68 @@ export const handler = async (
 
   const telegramUpdate: Update = JSON.parse(event.body || "{}");
   const telegramClient = new TelegramClient(telegramBotToken);
+  const locationRepository = new LocationRepository();
+  const quizService = new QuizService(locationRepository);
 
-  if (!telegramUpdate.message.text) {
+  if (telegramUpdate.callback_query) {
+    await telegramClient.sendMessage({
+      chat_id: telegramUpdate.callback_query.message.chat.id,
+      text: telegramUpdate.callback_query.data
+    });
+    const { question } = await quizService.newQuestion();
+    await telegramClient.sendMessage({
+      chat_id: telegramUpdate.callback_query.message.chat.id,
+      text: question.question,
+      reply_markup: {
+        inline_keyboard: [
+          question.answers.map(a => ({
+            text: a.label,
+            callback_data: a.isCorrect
+              ? "Wow! You're absolutely right."
+              : "Hm, your answer was wrong 😱"
+          }))
+        ]
+      }
+    });
+
+    return Ok;
+  }
+
+  if (!telegramUpdate.message) {
     return Ok;
   }
 
   switch (telegramUpdate.message.text) {
     case "/start": {
       await telegramClient.sendMessage({
-        chatId: telegramUpdate.message.chat.id,
+        chat_id: telegramUpdate.message.chat.id,
         text: "Welcom to Geo Quizzz 👋"
       });
       break;
     }
 
     case "/new": {
+      const { question } = await quizService.newQuestion();
       await telegramClient.sendMessage({
-        chatId: telegramUpdate.message.chat.id,
-        text: "New question 🎉"
+        chat_id: telegramUpdate.message.chat.id,
+        text: question.question,
+        reply_markup: {
+          inline_keyboard: [
+            question.answers.map(a => ({
+              text: a.label,
+              callback_data: a.isCorrect
+                ? "Wow! You're absolutely right."
+                : "Hm, your answer was wrong 😱"
+            }))
+          ]
+        }
       });
       break;
     }
 
     default: {
       await telegramClient.sendMessage({
-        chatId: telegramUpdate.message.chat.id,
+        chat_id: telegramUpdate.message.chat.id,
         text:
           "Hm, looks like I don't understand your message 😞 Do you want to have a /new question?"
       });

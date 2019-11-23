@@ -7,7 +7,7 @@ class LocationRepositoryMock implements LocationRepositoryInterface {
     return {
       cities: [
         {
-          id: "5",
+          id: "4",
           name: "Rome",
           country: "Italy",
           isCapital: true
@@ -28,19 +28,18 @@ test("newQuestion method should return question", async t => {
   const { question } = await quizService.newQuestion();
 
   const answer1 = {
-    id: "answer-capital-italy-rome",
-    label: "Rome"
+    label: "Rome",
+    isCorrect: true
   };
 
   const answer2 = {
-    id: "answer-capital-spain-madrid",
-    label: "Madrid"
+    label: "Madrid",
+    isCorrect: false
   };
 
-  t.is(question.id, "question-capital-italy-rome");
   t.is(question.question, "What is the capital city of Italy?");
 
-  if (question.answers[0].id === answer1.id) {
+  if (question.answers[0].label === answer1.label) {
     t.deepEqual(question.answers, [answer1, answer2]);
   } else {
     t.deepEqual(question.answers, [answer2, answer1]);

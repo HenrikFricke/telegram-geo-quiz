@@ -4,6 +4,7 @@ import {
   CitiesResponse,
   LocationRepositoryInterface
 } from "./LocationRepositoryInterface";
+import { shuffle } from "../utils/shuffle";
 
 const city1: City = {
   id: "1",
@@ -61,6 +62,6 @@ export class LocationRepository implements LocationRepositoryInterface {
       return true;
     });
 
-    return { cities: filteredCities.slice(0, limit) };
+    return { cities: shuffle(filteredCities).slice(0, limit) };
   }
 }
