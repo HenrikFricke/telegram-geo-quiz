@@ -13,7 +13,9 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.36",
     "@types/node-fetch": "^2.5.3",
+    "@types/sinon": "^7.5.1",
     "ava": "^2.4.0",
+    "sinon": "^7.5.0",
     "ts-node": "^8.5.2",
     "typescript": "^3.7.2"
   },
