@@ -39,7 +39,9 @@ const replyMarkup = {
       {
         text: fakeQuestion.answers[0].label,
         callback_data: "Wow! You're absolutely right."
-      },
+      }
+    ],
+    [
       {
         text: fakeQuestion.answers[1].label,
         callback_data: "Hm, your answer was wrong 😱"
@@ -86,12 +88,12 @@ test("/start", async t => {
 
   await t.context.telegramService.handle(startUpdate);
 
-  t.true(
-    t.context.sendMessageFake.calledWith({
+  t.deepEqual(t.context.sendMessageFake.firstCall.args, [
+    {
       chat_id: chatId,
       text: "Welcom to Geo Quizzz 👋"
-    })
-  );
+    }
+  ]);
 });
 
 test("/new", async t => {
@@ -110,13 +112,13 @@ test("/new", async t => {
 
   await t.context.telegramService.handle(startUpdate);
 
-  t.true(
-    t.context.sendMessageFake.calledWith({
+  t.deepEqual(t.context.sendMessageFake.firstCall.args, [
+    {
       chat_id: chatId,
       text: fakeQuestion.question,
       reply_markup: replyMarkup
-    })
-  );
+    }
+  ]);
 });
 
 test("callback query", async t => {
@@ -137,20 +139,20 @@ test("callback query", async t => {
 
   await t.context.telegramService.handle(startUpdate);
 
-  t.true(
-    t.context.sendMessageFake.calledWith({
+  t.deepEqual(t.context.sendMessageFake.firstCall.args, [
+    {
       chat_id: chatId,
       text: data
-    })
-  );
+    }
+  ]);
 
-  t.true(
-    t.context.sendMessageFake.calledWith({
+  t.deepEqual(t.context.sendMessageFake.secondCall.args, [
+    {
       chat_id: chatId,
       text: fakeQuestion.question,
       reply_markup: replyMarkup
-    })
-  );
+    }
+  ]);
 });
 
 test("unknown message", async t => {
@@ -169,11 +171,11 @@ test("unknown message", async t => {
 
   await t.context.telegramService.handle(startUpdate);
 
-  t.true(
-    t.context.sendMessageFake.calledWith({
+  t.deepEqual(t.context.sendMessageFake.firstCall.args, [
+    {
       chat_id: chatId,
       text:
         "Hm, looks like I don't understand your message 😞 Do you want to have a /new question?"
-    })
-  );
+    }
+  ]);
 });

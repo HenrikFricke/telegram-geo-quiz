@@ -67,14 +67,14 @@ export class TelegramService implements TelegramServiceInterface {
       chat_id: chatId,
       text: question.question,
       reply_markup: {
-        inline_keyboard: [
-          question.answers.map(a => ({
+        inline_keyboard: question.answers.map(a => [
+          {
             text: a.label,
             callback_data: a.isCorrect
               ? "Wow! You're absolutely right."
               : "Hm, your answer was wrong 😱"
-          }))
-        ]
+          }
+        ])
       }
     });
   }
