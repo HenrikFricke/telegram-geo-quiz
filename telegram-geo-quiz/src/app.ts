@@ -1,6 +1,9 @@
-import { Update, TelegramClient } from "./clients/TelegramClient";
-import { LocationRepository } from "./repositories/LocationRepository";
-import { QuizService } from "./services/QuizService";
+import {
+  Update,
+  TelegramClient
+} from "./clients/TelegramClient/TelegramClient";
+import { LocationRepository } from "./repositories/LocationRepository/LocationRepository";
+import { QuizService } from "./services/QuizService/QuizService";
 import {
   APIGatewayProxyResult,
   APIGatewayEventRequestContext,

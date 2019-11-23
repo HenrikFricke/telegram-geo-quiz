@@ -1,6 +1,6 @@
-import { LocationRepositoryInterface } from "../repositories/LocationRepositoryInterface";
+import { LocationRepositoryInterface } from "../../repositories/LocationRepository/LocationRepositoryInterface";
 import { QuizServiceInterface, Question } from "./QuizServiceInterface";
-import { shuffle } from "../utils/shuffle";
+import { shuffle } from "../../utils/shuffle";
 
 export class QuizService implements QuizServiceInterface {
   constructor(private locationRepository: LocationRepositoryInterface) {}

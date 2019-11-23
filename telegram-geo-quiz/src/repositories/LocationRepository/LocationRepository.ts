@@ -4,7 +4,7 @@ import {
   CitiesResponse,
   LocationRepositoryInterface
 } from "./LocationRepositoryInterface";
-import { shuffle } from "../utils/shuffle";
+import { shuffle } from "../../utils/shuffle";
 
 const city1: City = {
   id: "1",

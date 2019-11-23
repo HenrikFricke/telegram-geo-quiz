@@ -1,6 +1,6 @@
 import test from "ava";
 import { QuizService } from "./QuizService";
-import { LocationRepositoryInterface } from "../repositories/LocationRepositoryInterface";
+import { LocationRepositoryInterface } from "../../repositories/LocationRepository/LocationRepositoryInterface";
 
 class LocationRepositoryMock implements LocationRepositoryInterface {
   public async cities() {
