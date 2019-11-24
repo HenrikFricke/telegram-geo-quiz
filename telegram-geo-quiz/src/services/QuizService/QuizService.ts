@@ -26,6 +26,7 @@ export class QuizService implements QuizServiceInterface {
 
     return {
       question: `What is the capital city of ${expectedCity.country}?`,
+      expectedAnswer: answers.filter(a => a.isCorrect)[0],
       answers: shuffle(answers)
     };
   }

@@ -21,6 +21,10 @@ const test = anyTest as TestInterface<{
 
 const fakeQuestion: Question = {
   question: "What is the capital city of Italy?",
+  expectedAnswer: {
+    label: "Rome",
+    isCorrect: true
+  },
   answers: [
     {
       label: "Rome",
@@ -38,13 +42,13 @@ const replyMarkup = {
     [
       {
         text: fakeQuestion.answers[0].label,
-        callback_data: "Wow! You're absolutely right."
+        callback_data: "Top 👍"
       }
     ],
     [
       {
         text: fakeQuestion.answers[1].label,
-        callback_data: "Hm, your answer was wrong 😱"
+        callback_data: "Hm 😳 The right answer is Rome."
       }
     ]
   ]

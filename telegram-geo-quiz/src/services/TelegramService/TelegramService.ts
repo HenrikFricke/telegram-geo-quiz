@@ -71,8 +71,8 @@ export class TelegramService implements TelegramServiceInterface {
           {
             text: a.label,
             callback_data: a.isCorrect
-              ? "Wow! You're absolutely right."
-              : "Hm, your answer was wrong 😱"
+              ? "Top 👍"
+              : `Hm 😳 The right answer is ${question.expectedAnswer.label}.`
           }
         ])
       }
