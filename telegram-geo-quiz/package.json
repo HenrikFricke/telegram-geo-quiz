@@ -23,9 +23,6 @@
     "node-fetch": "^2.6.0"
   },
   "ava": {
-    "files": [
-      "src/**/*.test.ts"
-    ],
     "compileEnhancements": false,
     "extensions": [
       "ts"
