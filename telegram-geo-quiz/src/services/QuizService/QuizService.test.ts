@@ -8,14 +8,14 @@ class LocationRepositoryMock implements LocationRepositoryInterface {
       cities: [
         {
           id: "4",
-          name: "Rome",
-          country: "Italy",
+          name: "rome",
+          country: "italy",
           isCapital: true
         },
         {
           id: "5",
-          name: "Madrid",
-          country: "Spain",
+          name: "madrid",
+          country: "spain",
           isCapital: true
         }
       ]
