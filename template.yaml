@@ -17,15 +17,36 @@ Resources:
       CodeUri: telegram-geo-quiz/
       Handler: src/app.handler
       Runtime: nodejs12.x
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LocationTable
       Environment:
         Variables:
           TELEGRAM_BOT_TOKEN: !Ref TelegramBotToken
+          LOCATION_TABLE_NAME: !Ref LocationTable
       Events:
         TelegramGeoQuiz:
           Type: Api
           Properties:
             Path: /
             Method: post
+
+  LocationTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: location
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: location
+          KeyType: RANGE
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      BillingMode: PAY_PER_REQUEST
 
 Outputs:
   TelegramGeoQuizApi:

@@ -11,6 +11,7 @@ import { LocationRepository } from "../../repositories/LocationRepository/Locati
 import { TelegramClientInterface } from "../../clients/TelegramClient/TelegramClientInterface";
 import { QuizServiceInterface } from "../QuizService/QuizServiceInterface";
 import { Question } from "../QuizService/QuizServiceInterface";
+import { createDynamoDBClient } from "../../factories/dynamoDBClient";
 
 const test = anyTest as TestInterface<{
   telegramClient: TelegramClientInterface;
@@ -63,7 +64,9 @@ test.beforeEach(t => {
     t.context.sendMessageFake
   );
 
-  t.context.quizService = new QuizService(new LocationRepository());
+  t.context.quizService = new QuizService(
+    new LocationRepository(createDynamoDBClient(), "")
+  );
   sinon.replace(
     t.context.quizService,
     "newQuestion",

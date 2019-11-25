@@ -16,9 +16,7 @@ export class TelegramService implements TelegramServiceInterface {
   async handle(update: TelegramWebhookUpdate) {
     if (update.callback_query) {
       await this.hadleCallbackQueries(update.callback_query);
-    }
-
-    if (update.message) {
+    } else if (update.message) {
       await this.handleTextMessage(update.message);
     }
   }
@@ -45,7 +43,7 @@ export class TelegramService implements TelegramServiceInterface {
       }
 
       case "/new": {
-        return await this.newQuestion(chatId);
+        return this.newQuestion(chatId);
       }
 
       default: {
