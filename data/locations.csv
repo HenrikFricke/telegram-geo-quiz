@@ -1,0 +1,7 @@
+"id (S)","location (S)","isCapital (BOOL)",
+"1","city#earth#europe#germany#berlin","true",
+"2","city#earth#europe#france#paris","true",
+"3","city#earth#europe#spain#madrid","true",
+"4","city#earth#europe#austria#vienna","true",
+"5","city#earth#europe#italy#rome","true",
+"6","city#earth#europe#germany#hamburg","false",

@@ -1,0 +1,14 @@
+{
+  "name": "telegram-geo-quiz",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "repository": "git@github.com:HenrikFricke/telegram-geo-quiz.git",
+  "author": "Henrik Fricke <henrik.fricke@jimdo.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "async-csv": "^2.1.2",
+    "aws-sdk": "^2.580.0",
+    "csv-parse": "^4.8.2"
+  }
+}

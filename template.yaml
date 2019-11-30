@@ -52,3 +52,6 @@ Outputs:
   TelegramGeoQuizApi:
     Description: "API Gateway endpoint URL for Prod stage for Telegram Geo Quiz function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  LocationTableName:
+    Description: "Name of the DynamoDB database for the locations"
+    Value: !Ref LocationTable

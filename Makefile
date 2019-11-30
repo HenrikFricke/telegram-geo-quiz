@@ -5,6 +5,7 @@ BUCKET_NAME=telegram-geo-quiz
 
 dependencies:
 	yarn --cwd $(SOURCE_DIR)
+	yarn
 
 start:
 	yarn --cwd $(SOURCE_DIR) tsc --watch & sam local start-api
@@ -26,8 +27,14 @@ deploy: guard-TELEGRAM_BOT_TOKEN build
 		--capabilities CAPABILITY_IAM \
 		--parameter-overrides TelegramBotToken=${TELEGRAM_BOT_TOKEN}
 
+upload-dynamodb-data:
+	@TABLE_NAME=$(shell make table-name) node --experimental-modules scripts/upload-dynamodb-data.mjs
+
 info:
 	@aws cloudformation describe-stacks --stack-name telegram-geo-quiz --query 'Stacks[].Outputs[?OutputKey==`TelegramGeoQuizApi`]' --output table
+
+table-name:
+	@aws cloudformation describe-stacks --stack-name telegram-geo-quiz --query 'Stacks[].Outputs[?OutputKey==`LocationTableName`].OutputValue' --output text
 
 guard-%:
 	@ if [ "${${*}}" = "" ]; then \
