@@ -14,24 +14,35 @@ import AWS from "aws-sdk";
   }
 
   const client = new AWS.DynamoDB.DocumentClient();
+  const putRequests = rows
+    .filter((r, i) => i !== 0)
+    .map(row => ({
+      PutRequest: {
+        Item: {
+          id: row[[0]],
+          location: row[1],
+          isCapital: row[2] === "true"
+        }
+      }
+    }));
 
-  var params = {
-    RequestItems: {
-      [tableName]: rows
-        .filter((r, i) => i !== 0)
-        .map(row => ({
-          PutRequest: {
-            Item: {
-              id: row[[0]],
-              location: row[1],
-              isCapital: row[2] === "true"
-            }
+  const chunks = putRequests.reduce((all, one, i) => {
+    const ch = Math.floor(i / 25);
+    all[ch] = [].concat(all[ch] || [], one);
+    return all;
+  }, []);
+
+  await Promise.all(
+    chunks.map(chunk =>
+      client
+        .batchWrite({
+          RequestItems: {
+            [tableName]: chunk
           }
-        }))
-    }
-  };
-
-  await client.batchWrite(params).promise();
+        })
+        .promise()
+    )
+  );
 
   console.log("Done.");
 })();

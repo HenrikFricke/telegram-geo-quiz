@@ -36,6 +36,9 @@ info:
 table-name:
 	@aws cloudformation describe-stacks --stack-name telegram-geo-quiz --query 'Stacks[].Outputs[?OutputKey==`LocationTableName`].OutputValue' --output text
 
+write-locations-csv:
+	@node --experimental-modules scripts/write-locations-csv.mjs
+
 guard-%:
 	@ if [ "${${*}}" = "" ]; then \
 			echo "Environment variable $* not set"; \
