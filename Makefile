@@ -1,3 +1,4 @@
+$(shell touch .env)
 include .env
 
 SOURCE_DIR=telegram-geo-quiz

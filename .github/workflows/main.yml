@@ -1,22 +1,17 @@
 name: CI
 
-on:
-  pull_request:
-    branches:
-    - master
+on: push
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Setup Node.js
-      uses: actions/setup-node@v1.1.0
-      with:
-        version: 12
-    - name: Install dependencies
-      run: make dependencies
-    - name: Build TS
-      run: make build
-      
-      
+      - uses: actions/checkout@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v1.1.0
+        with:
+          version: 12
+      - name: Install dependencies
+        run: make dependencies
+      - name: Build TS
+        run: make build
