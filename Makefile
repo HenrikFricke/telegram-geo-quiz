@@ -15,10 +15,11 @@ build:
 	yarn --cwd $(SOURCE_DIR) build
 
 test:
-	yarn --cwd $(SOURCE_DIR) test --watch
-
-test-ci:
-	yarn --cwd $(SOURCE_DIR) test
+	@ if [ "${CI}" = "true" ]; then \
+			yarn --cwd $(SOURCE_DIR) test; \
+	else \
+		yarn --cwd $(SOURCE_DIR) test --watch; \
+	fi
 
 create-bucket:
 	@aws s3 mb s3://$(BUCKET_NAME)
