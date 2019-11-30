@@ -17,6 +17,9 @@ build:
 test:
 	yarn --cwd $(SOURCE_DIR) test --watch
 
+test-ci:
+	yarn --cwd $(SOURCE_DIR) test
+
 create-bucket:
 	@aws s3 mb s3://$(BUCKET_NAME)
 
