@@ -1,3 +1,4 @@
 export function capitalize(text: string) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
+  const words = text.split(" ");
+  return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 }
