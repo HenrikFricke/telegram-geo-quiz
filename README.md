@@ -30,6 +30,7 @@ $ > make build
 
 ```
 TELEGRAM_BOT_TOKEN=
+ENVIRONMENT=staging
 ```
 
 3. Make sure you have AWS credentials in your environment
@@ -39,7 +40,7 @@ TELEGRAM_BOT_TOKEN=
 7. Set the webhook to integrate the stack with Telegram:
 
 ```shell
-curl -X POST https://api.telegram.org/{{ TELEGRAM_BOT_TOKEN }}/setWebhook\?url\={{ encoded url }
+curl -X POST https://api.telegram.org/bot{{ TELEGRAM_BOT_TOKEN }}/setWebhook\?url\={{ encoded url }
 ```
 
 8. Upload locations to the DynamoDB table: `make upload-dynamodb-data`

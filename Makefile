@@ -1,13 +1,14 @@
+$(shell touch .env)
+include .env
+
 AWS_REGION=eu-west-1
 AWS_DEFAULT_REGION=eu-west-1
 SOURCE_DIR=telegram-geo-quiz
-BUCKET_NAME=telegram-geo-quiz-$(AWS_REGION)
+BUCKET_NAME=telegram-geo-quiz-$(AWS_REGION)-${ENVIRONMENT}
+STACK_NAME=telegram-geo-quiz-${ENVIRONMENT}
 
 export AWS_REGION
 export AWS_DEFAULT_REGION
-
-$(shell touch .env)
-include .env
 
 node_modules/.yarn-integrity: yarn.lock
 	yarn
@@ -32,18 +33,18 @@ test: dependencies
 		yarn --cwd $(SOURCE_DIR) test --watch; \
 	fi
 
-create-bucket:
+create-bucket: guard-ENVIRONMENT
 	@aws s3 mb s3://$(BUCKET_NAME)
 
-deploy: guard-TELEGRAM_BOT_TOKEN build
+deploy: guard-TELEGRAM_BOT_TOKEN guard-ENVIRONMENT build
 	@sam package --output-template-file packaged.yaml --s3-bucket $(BUCKET_NAME)
 	@sam deploy \
 		--template-file packaged.yaml \
-		--stack-name telegram-geo-quiz \
+		--stack-name ${STACK_NAME} \
 		--capabilities CAPABILITY_IAM \
-		--parameter-overrides TelegramBotToken=${TELEGRAM_BOT_TOKEN}
+		--parameter-overrides TelegramBotToken=${TELEGRAM_BOT_TOKEN} Environment=${ENVIRONMENT}
 	@aws cloudformation describe-stacks \
-		--stack-name telegram-geo-quiz \
+		--stack-name ${STACK_NAME} \
 		--query 'Stacks[].Outputs' \
 		--output table
 
@@ -52,7 +53,7 @@ upload-dynamodb-data:
 
 table-name:
 	@aws cloudformation describe-stacks \
-		--stack-name telegram-geo-quiz \
+		--stack-name ${STACK_NAME} \
 		--query 'Stacks[].Outputs[?OutputKey==`LocationTableName`].OutputValue' \
 		--output text
 
