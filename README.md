@@ -1,4 +1,5 @@
 # Telegram Geo Quiz
+[![](https://github.com/HenrikFricke/telegram-geo-quiz/workflows/CI/badge.svg)](https://github.com/HenrikFricke/telegram-geo-quiz/actions)
 
 ## Dependencies
 
