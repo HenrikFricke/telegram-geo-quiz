@@ -55,7 +55,8 @@ export class TelegramService implements TelegramServiceInterface {
   private async greeting(chatId: string) {
     return this.telegramClient.sendMessage({
       chat_id: chatId,
-      text: "Welcom to Geo Quizzz 👋"
+      text:
+        "Welcome 👋 I'm a simple geography quiz. Just fire the /new command and get the first question. 🤓"
     });
   }
 
