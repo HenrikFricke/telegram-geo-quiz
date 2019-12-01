@@ -10,13 +10,7 @@
 
 ## Development
 
-Make sure to have AWS credentials in your environment to process the deployment. Also, create a `.env` file with the following variables:
-
-```
-TELEGRAM_BOT_TOKEN=
-```
-
-Now you can execute the following commands:
+The setup is very test-driven: In theory, you could start a local environment with Sam, but it's not very helpful as the communication to Telegram is not working locally. The recommended approach is to implement new features with unit tests and then create a bot instance to test it directly in Telegram.
 
 ```shell
 # Local dev environment
@@ -27,19 +21,31 @@ $ > make test
 
 # Build TypeScript
 $ > make build
-
-# Create S3 bucket for Cloudformation
-# (only necessary once per environment)
-$ > make create-bucket
-
-# Transpile TS files, upload package to S3 bucket and deploy Cloudformation stack
-$ > make deploy
 ```
 
-## Improvements
+## Setup bot instance
 
-- Get rid of the TypeScript files in deployed package
-- Get rid of the dev dependencies in deployed package
+1. Use [Telegram's BotFather](https://core.telegram.org/bots#6-botfather) to create a bot.
+2. Take the generated token of the new bot and create a `.env` file:
+
+```
+TELEGRAM_BOT_TOKEN=
+```
+
+3. Make sure you have AWS credentials in your environment
+4. Create a S3 bucket for your Cloudformation stack: `make create-bucket`
+5. Deploy the stack: `make deploy`
+6. After the deployment, you should receive a URL in the terminal. Copy it.
+7. Set the webhook to integrate the stack with Telegram:
+
+```shell
+curl -X POST https://api.telegram.org/{{ TELEGRAM_BOT_TOKEN }}/setWebhook\?url\={{ encoded url }
+```
+
+8. Upload locations to the DynamoDB table: `make upload-dynamodb-data`
+9. Now you should be able to interact with the bot. Send some messages to the bot in Telegram.
+
+Next time, you just need to execute `make deploy` to update your tech stack.
 
 ## Resources
 
