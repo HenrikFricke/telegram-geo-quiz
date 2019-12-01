@@ -113,4 +113,4 @@ jobs:
       - name: Deploy
         uses: apex/actions/aws/sam@master
         with:
-          args: deploy --template-file packaged.yaml --stack-name telegram-geo-quiz-prod --capabilities CAPABILITY_IAM --parameter-overrides TelegramBotToken=${TELEGRAM_BOT_TOKEN} Environment=${ENVIRONMENT}
+          args: deploy --template-file packaged.yaml --stack-name telegram-geo-quiz-prod --capabilities CAPABILITY_IAM --parameter-overrides TelegramBotToken=${{ secrets.TELEGRAM_BOT_TOKEN }} Environment=${{ env.ENVIRONMENT }}
