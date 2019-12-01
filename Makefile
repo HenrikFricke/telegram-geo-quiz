@@ -1,5 +1,10 @@
+AWS_REGION=eu-west-1
+AWS_DEFAULT_REGION=eu-west-1
 SOURCE_DIR=telegram-geo-quiz
-BUCKET_NAME=telegram-geo-quiz
+BUCKET_NAME=telegram-geo-quiz-$(AWS_REGION)
+
+export AWS_REGION
+export AWS_DEFAULT_REGION
 
 $(shell touch .env)
 include .env
