@@ -1,20 +1,26 @@
-$(shell touch .env)
-include .env
-
 SOURCE_DIR=telegram-geo-quiz
 BUCKET_NAME=telegram-geo-quiz
 
-dependencies:
-	yarn --cwd $(SOURCE_DIR)
-	yarn
+$(shell touch .env)
+include .env
 
-start:
+node_modules/.yarn-integrity: yarn.lock
+	yarn
+	@touch $@
+
+$(SOURCE_DIR)/node_modules/.yarn-integrity: $(SOURCE_DIR)/yarn.lock
+	yarn --cwd $(SOURCE_DIR)
+	@touch $@
+
+dependencies: node_modules/.yarn-integrity $(SOURCE_DIR)/node_modules/.yarn-integrity
+
+start: dependencies
 	yarn --cwd $(SOURCE_DIR) tsc --watch & sam local start-api
 
-build:
+build: dependencies
 	yarn --cwd $(SOURCE_DIR) build
 
-test:
+test: dependencies
 	@ if [ "${CI}" = "true" ]; then \
 			yarn --cwd $(SOURCE_DIR) test; \
 	else \
@@ -31,18 +37,19 @@ deploy: guard-TELEGRAM_BOT_TOKEN build
 		--stack-name telegram-geo-quiz \
 		--capabilities CAPABILITY_IAM \
 		--parameter-overrides TelegramBotToken=${TELEGRAM_BOT_TOKEN}
+	@aws cloudformation describe-stacks \
+		--stack-name telegram-geo-quiz \
+		--query 'Stacks[].Outputs' \
+		--output table
 
 upload-dynamodb-data:
 	@TABLE_NAME=$(shell make table-name) node --experimental-modules scripts/upload-dynamodb-data.mjs
 
-info:
-	@aws cloudformation describe-stacks --stack-name telegram-geo-quiz --query 'Stacks[].Outputs[?OutputKey==`TelegramGeoQuizApi`]' --output table
-
 table-name:
-	@aws cloudformation describe-stacks --stack-name telegram-geo-quiz --query 'Stacks[].Outputs[?OutputKey==`LocationTableName`].OutputValue' --output text
-
-write-locations-csv:
-	@node --experimental-modules scripts/write-locations-csv.mjs
+	@aws cloudformation describe-stacks \
+		--stack-name telegram-geo-quiz \
+		--query 'Stacks[].Outputs[?OutputKey==`LocationTableName`].OutputValue' \
+		--output text
 
 guard-%:
 	@ if [ "${${*}}" = "" ]; then \

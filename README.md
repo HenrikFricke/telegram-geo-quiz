@@ -19,11 +19,14 @@ TELEGRAM_BOT_TOKEN=
 Now you can execute the following commands:
 
 ```shell
-# Install Yarn dependencies
-$ > make dependencies
-
 # Local dev environment
 $ > make start
+
+# Run unit tests
+$ > make test
+
+# Build TypeScript
+$ > make build
 
 # Create S3 bucket for Cloudformation
 # (only necessary once per environment)
@@ -37,7 +40,6 @@ $ > make deploy
 
 - Get rid of the TypeScript files in deployed package
 - Get rid of the dev dependencies in deployed package
-- Use GitHub Actions to automate deployment
 
 ## Resources
 
