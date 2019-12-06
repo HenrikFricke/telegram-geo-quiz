@@ -1,3 +1,8 @@
+export enum QuestionType {
+  CAPITAL_CITY_1,
+  CAPITAL_CITY_2
+}
+
 export interface Question {
   question: string;
   expectedAnswer: Answer;
@@ -14,5 +19,5 @@ export interface NewQuestionResponse {
 }
 
 export interface QuizServiceInterface {
-  newQuestion(): Promise<NewQuestionResponse>;
+  newQuestion(type?: QuestionType): Promise<NewQuestionResponse>;
 }
